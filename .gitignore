@@ -1,55 +1,65 @@
-# Virtual Environment
+# ==================================================
+# 1. Environments & Virtual Environments
+# ==================================================
 venv/
 env/
 ENV/
+.venv/
 env.bak/
 venv.bak/
 
-# Environment Variables & Secrets (KABHI PUSH NAHI HONA CHAHIYE)
+# ==================================================
+# 2. Secrets & API Keys (CRITICAL: Never Commit)
+# ==================================================
 .env
-.env.local
-.env.*.local
+.env.*
 *.env
+# Allow example file for GitHub reference
+!.env.example
 
-# Python Bytecode & Cache
+# ==================================================
+# 3. Python Cache, Bytecode & Build Artifacts
+# ==================================================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+build/
+dist/
+*.egg-info/
+develop-eggs/
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Logs & Storage
+# ==================================================
+# 4. Logs & Local Storage
+# ==================================================
 logs/
 *.log
 *.sqlite3
+*.rdb
+*.aof
 
-# Packaging & Distribution
-build/
-dist/
-*.egg-info/
-eggs/
-parts/
-bin/
-var/
-sdist/
-develop-eggs/
-
-# Frontend (Node, Astro, Vite, Tailwind)
+# ==================================================
+# 5. Frontend (AstroJS, Node.js, Tailwind, Vite)
+# ==================================================
 node_modules/
 .astro/
+frontend/node_modules/
+frontend/.astro/
+frontend/dist/
 dist/
 .output/
 
-# OS Specific & IDEs
+# ==================================================
+# 6. Operating System & IDE Junk
+# ==================================================
 .DS_Store
 Thumbs.db
+.idea/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.idea/
-*.swp
-*.swo
