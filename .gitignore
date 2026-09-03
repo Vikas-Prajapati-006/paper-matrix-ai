@@ -1,0 +1,55 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables & Secrets (KABHI PUSH NAHI HONA CHAHIYE)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs & Storage
+logs/
+*.log
+*.sqlite3
+
+# Packaging & Distribution
+build/
+dist/
+*.egg-info/
+eggs/
+parts/
+bin/
+var/
+sdist/
+develop-eggs/
+
+# Frontend (Node, Astro, Vite, Tailwind)
+node_modules/
+.astro/
+dist/
+.output/
+
+# OS Specific & IDEs
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
