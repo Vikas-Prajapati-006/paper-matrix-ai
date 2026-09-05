@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import FileUploadZone from '../../components/FileUploadZone.astro';
+import MatrixTable from '../../components/MatrixTable.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import Footer from '../../components/Footer.astro';
+import { languages, ui } from '../../i18n/ui';
+import { useTranslations } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as keyof typeof ui);
+---
+
+<BaseLayout>
+  <Header />
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-12 sm:py-16 flex flex-col items-center">
+    <!-- Localized Hero -->
+    <div class="text-center max-w-2xl mx-auto space-y-3 mb-10">
+      <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-[11px] font-mono tracking-wide">
+        <span class="h-1.5 w-1.5 rounded-full bg-indigo-400"></span>
+        {t('hero.badge')}
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-100 sm:leading-tight">
+        {t('hero.title')}
+      </h1>
+      <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl mx-auto">
+        {t('hero.subtitle')}
+      </p>
+    </div>
+
+    <!-- Extraction Zone -->
+    <FileUploadZone />
+
+    <!-- Matrix Output -->
+    <MatrixTable />
+
+    <!-- FAQ -->
+    <FAQAccordion />
+  </main>
+
+  <Footer />
+</BaseLayout>

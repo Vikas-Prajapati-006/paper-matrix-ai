@@ -1,0 +1,45 @@
+---
+const faqs = [
+  {
+    q: "How does PaperMatrix AI extract information accurately?",
+    a: "We extract text sections using PyMuPDF and analyze targeted segments with high-throughput LLMs (Groq Llama-3.3-70b). Rather than guessing, the pipeline strictly adheres to structured schema constraints for Problem Statements, Methodologies, and Findings."
+  },
+  {
+    q: "What paper formats and sizes are supported?",
+    a: "Standard academic PDF formats including IEEE, ACM, Springer, arXiv, and Elsevier publications up to 15MB are fully supported."
+  },
+  {
+    q: "How does the free credit quota work?",
+    a: "Every device receives 3 free document extractions every 24 hours. The quota tracks anonymous browser hardware fingerprints and resets daily at 00:00 UTC."
+  },
+  {
+    q: "Can I export data directly to my thesis or LaTeX document?",
+    a: "Yes. You can export clean .xlsx files for quantitative tracking or grab ready-to-compile LaTeX table environments formatted with clean column wraps."
+  }
+];
+---
+
+<section class="w-full max-w-3xl mx-auto mt-20 pt-10 border-t border-zinc-900">
+  <div class="text-center mb-8">
+    <h3 class="text-sm font-semibold tracking-tight text-zinc-200">Frequently Asked Questions</h3>
+    <p class="text-xs text-zinc-500 font-mono mt-1">Everything you need to know about the synthesis engine</p>
+  </div>
+
+  <div class="space-y-3">
+    {faqs.map((faq) => (
+      <details class="group rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-4 transition-all [&_summary::-webkit-details-marker]:hidden">
+        <summary class="flex cursor-pointer items-center justify-between text-xs font-medium text-zinc-300 group-hover:text-zinc-100 select-none">
+          <span>{faq.q}</span>
+          <span class="ml-4 shrink-0 transition-transform duration-200 group-open:-rotate-180 text-zinc-500">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </summary>
+        <p class="mt-3 text-xs leading-relaxed text-zinc-400 font-sans border-t border-zinc-800/40 pt-3">
+          {faq.a}
+        </p>
+      </details>
+    ))}
+  </div>
+</section>

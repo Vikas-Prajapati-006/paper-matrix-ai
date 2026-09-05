@@ -63,3 +63,19 @@ Thumbs.db
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+
+# Nested .env files in subfolders (backend/.env, frontend/.env.local)
+**/.env
+**/.env.*
+!**/.env.example
+
+# Frontend build cache & npm logs
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test coverage artifacts
+.tox/
+.nox/

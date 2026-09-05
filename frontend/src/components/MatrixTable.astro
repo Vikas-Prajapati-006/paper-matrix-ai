@@ -1,0 +1,404 @@
+---
+---
+
+<div id="matrix-container" class="w-full max-w-7xl mx-auto mt-10 hidden space-y-4">
+  <!-- Table Controls Bar -->
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-zinc-900/40 p-4 rounded-xl border border-zinc-800 backdrop-blur-sm">
+    <div class="flex items-center gap-3">
+      <div class="h-2 w-2 rounded-full bg-indigo-500"></div>
+      <h2 class="text-sm font-semibold tracking-tight text-zinc-100">
+        Literature Review Synthesis Matrix
+      </h2>
+      <span id="matrix-count-badge" class="text-xs font-mono px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+        0 Papers
+      </span>
+    </div>
+
+    <!-- Export Action Buttons -->
+    <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+      <!-- NAYA FEATURE ACTION BUTTON -->
+      <button
+        id="draft-prose-btn"
+        class="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg border border-purple-500/40 bg-purple-950/30 hover:bg-purple-900/40 text-purple-300 hover:text-purple-200 text-xs font-medium transition-all shadow-sm active:scale-95"
+      >
+        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        <span>Auto-Draft Related Work</span>
+      </button>
+
+      <button
+        id="export-excel-btn"
+        class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg border border-zinc-700 bg-zinc-800/80 hover:bg-zinc-700/80 hover:text-white text-zinc-300 text-xs font-medium transition-all shadow-sm active:scale-95"
+      >
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Export Excel (.xlsx)
+      </button>
+
+      <button
+        id="export-latex-btn"
+        class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg border border-indigo-500/40 bg-indigo-950/30 hover:bg-indigo-900/40 text-indigo-300 hover:text-indigo-200 text-xs font-medium transition-all shadow-sm active:scale-95"
+      >
+        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Export LaTeX (.tex)
+      </button>
+
+      <!-- NAYA BIBTEX BUTTON ADDITION -->
+      <button
+        id="export-bibtex-btn"
+        class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg border border-amber-500/40 bg-amber-950/30 hover:bg-amber-900/40 text-amber-300 hover:text-amber-200 text-xs font-medium transition-all shadow-sm active:scale-95"
+      >
+        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+        </svg>
+        Export BibTeX (.bib)
+      </button>
+
+      <button
+        id="clear-matrix-btn"
+        title="Clear Table"
+        class="px-2.5 py-1.5 rounded-lg border border-zinc-800 hover:border-rose-900/50 bg-zinc-900 hover:bg-rose-950/30 text-zinc-500 hover:text-rose-400 text-xs transition-all"
+      >
+        Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Dynamic Responsive Table Viewport -->
+  <div class="rounded-xl border border-zinc-800 bg-[#121215] overflow-hidden shadow-2xl">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr id="matrix-thead-tr" class="border-b border-zinc-800 bg-zinc-900/80 text-zinc-400 font-mono uppercase tracking-wider">
+            <!-- Headers render dynamically -->
+          </tr>
+        </thead>
+        <tbody id="matrix-tbody" class="divide-y divide-zinc-800/60 text-zinc-300">
+          <!-- Dynamically populated rows -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- NAYA COMPONENT: Auto-Drafted Related Work Section Card -->
+  <div id="prose-card" class="hidden rounded-xl border border-purple-500/30 bg-[#121217] p-6 space-y-4 shadow-xl">
+    <div class="flex items-center justify-between border-b border-zinc-800/80 pb-3">
+      <div class="flex items-center gap-2">
+        <span class="h-2 w-2 rounded-full bg-purple-400"></span>
+        <h3 class="text-sm font-semibold text-zinc-100 tracking-tight">Auto-Drafted Related Work (Synthesis Prose)</h3>
+      </div>
+      <button 
+        id="copy-prose-btn"
+        class="px-3 py-1 text-xs rounded-md border border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700 transition"
+      >
+        Copy Prose
+      </button>
+    </div>
+    <div id="prose-content" class="text-sm text-zinc-300 leading-relaxed font-sans whitespace-pre-line space-y-3">
+      <!-- AI Generated Prose will inject here -->
+    </div>
+  </div>
+</div>
+
+<script>
+  const BACKEND_URL = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
+  let matrixData: Record<string, any>[] = [];
+  let isSynthesizing: boolean = false;
+  let isDraftingProse: boolean = false;
+  let displayColumns: string[] = [
+    'title',
+    'authors',
+    'year',
+    'problem_statement',
+    'methodology',
+    'key_findings',
+    'limitations',
+    'future_scope'
+  ];
+
+  const container = document.getElementById('matrix-container') as HTMLDivElement;
+  const theadTr = document.getElementById('matrix-thead-tr') as HTMLTableRowElement;
+  const tbody = document.getElementById('matrix-tbody') as HTMLTableSectionElement;
+  const countBadge = document.getElementById('matrix-count-badge') as HTMLSpanElement;
+  const exportExcelBtn = document.getElementById('export-excel-btn') as HTMLButtonElement;
+  const exportLatexBtn = document.getElementById('export-latex-btn') as HTMLButtonElement;
+  const exportBibtexBtn = document.getElementById('export-bibtex-btn') as HTMLButtonElement;
+  const clearBtn = document.getElementById('clear-matrix-btn') as HTMLButtonElement;
+  const draftProseBtn = document.getElementById('draft-prose-btn') as HTMLButtonElement;
+  const proseCard = document.getElementById('prose-card') as HTMLDivElement;
+  const proseContent = document.getElementById('prose-content') as HTMLDivElement;
+  const copyProseBtn = document.getElementById('copy-prose-btn') as HTMLButtonElement;
+
+  function renderTable() {
+    if (matrixData.length === 0 && !isSynthesizing) {
+      container.classList.add('hidden');
+      proseCard.classList.add('hidden');
+      return;
+    }
+
+    container.classList.remove('hidden');
+    countBadge.textContent = `${matrixData.length} ${matrixData.length === 1 ? 'Paper' : 'Papers'}`;
+
+    // Render Table Headers Dynamically
+    theadTr.innerHTML = '';
+    displayColumns.forEach((col) => {
+      const th = document.createElement('th');
+      th.className = 'py-3 px-4 font-medium min-w-[130px] whitespace-nowrap';
+      th.textContent = col.replace(/_/g, ' ');
+      theadTr.appendChild(th);
+    });
+
+    const actionTh = document.createElement('th');
+    actionTh.className = 'py-3 px-2 w-10 text-center';
+    theadTr.appendChild(actionTh);
+
+    // Render Table Body Rows Dynamically
+    tbody.innerHTML = '';
+
+    // Render shimmering skeleton row on top while synthesis is in flight
+    if (isSynthesizing) {
+      const skeletonTr = document.createElement('tr');
+      skeletonTr.className = 'animate-pulse bg-indigo-950/10';
+
+      displayColumns.forEach((col) => {
+        const td = document.createElement('td');
+        td.className = 'py-4 px-4 align-top space-y-2';
+
+        if (col === 'title') {
+          td.innerHTML = `
+            <div class="h-3.5 bg-indigo-500/20 rounded w-3/4"></div>
+            <div class="h-2.5 bg-zinc-800 rounded w-1/2"></div>
+          `;
+        } else if (col === 'year') {
+          td.innerHTML = `<div class="h-3 bg-zinc-800 rounded w-10"></div>`;
+        } else {
+          td.innerHTML = `
+            <div class="h-2.5 bg-zinc-800 rounded w-full"></div>
+            <div class="h-2.5 bg-zinc-800/60 rounded w-4/5"></div>
+          `;
+        }
+        skeletonTr.appendChild(td);
+      });
+
+      const emptyActionTd = document.createElement('td');
+      emptyActionTd.className = 'py-4 px-2 text-center';
+      emptyActionTd.innerHTML = `<div class="h-2 w-2 rounded-full bg-indigo-500/50 mx-auto animate-ping"></div>`;
+      skeletonTr.appendChild(emptyActionTd);
+
+      tbody.appendChild(skeletonTr);
+    }
+
+    matrixData.forEach((row, index) => {
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-zinc-900/40 transition-colors group';
+
+      displayColumns.forEach((col) => {
+        const td = document.createElement('td');
+        td.className = 'py-3 px-4 align-top leading-relaxed';
+
+        const rawVal = row[col] !== undefined && row[col] !== null ? String(row[col]) : '—';
+        if (col === 'title') {
+          const authorsVal = row['authors'] ? String(row['authors']) : '';
+          td.innerHTML = `
+            <div class="font-medium text-zinc-100 leading-snug">${escapeHtml(rawVal)}</div>
+            ${!displayColumns.includes('authors') && authorsVal ? `<div class="text-[11px] text-zinc-500 font-mono mt-1">${escapeHtml(authorsVal)}</div>` : ''}
+          `;
+        } else if (col === 'year' || col === 'methodology') {
+          td.className += ' font-mono text-[11px] text-zinc-400';
+          td.textContent = rawVal;
+        } else {
+          td.textContent = rawVal;
+        }
+
+        tr.appendChild(td);
+      });
+
+      // Delete Row Button
+      const deleteTd = document.createElement('td');
+      deleteTd.className = 'py-3 px-2 align-top text-center';
+      deleteTd.innerHTML = `
+        <button data-index="${index}" class="delete-row-btn text-zinc-600 hover:text-rose-400 p-1 rounded opacity-0 group-hover:opacity-100 transition-all">
+          &times;
+        </button>
+      `;
+      tr.appendChild(deleteTd);
+
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('.delete-row-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const idx = Number((e.currentTarget as HTMLElement).getAttribute('data-index'));
+        matrixData.splice(idx, 1);
+        saveAndSync();
+      });
+    });
+  }
+
+  function escapeHtml(str: string): string {
+    return (str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function saveAndSync() {
+    localStorage.setItem('pm_matrix_rows', JSON.stringify(matrixData));
+    localStorage.setItem('pm_matrix_cols', JSON.stringify(displayColumns));
+    renderTable();
+  }
+
+  // Column Change Listener
+  window.addEventListener('columns-updated', (e: any) => {
+    if (e.detail && Array.isArray(e.detail)) {
+      displayColumns = e.detail;
+      renderTable();
+    }
+  });
+
+  // Start synthesis skeleton event
+  window.addEventListener('synthesis-started', () => {
+    isSynthesizing = true;
+    renderTable();
+  });
+
+  // End synthesis skeleton event
+  window.addEventListener('synthesis-ended', () => {
+    isSynthesizing = false;
+    renderTable();
+  });
+
+  // Incoming synthesized event
+  window.addEventListener('paper-parsed', (e: any) => {
+    if (e.detail) {
+      const incomingRow = e.detail.row || e.detail;
+      if (e.detail.columns && Array.isArray(e.detail.columns)) {
+        displayColumns = e.detail.columns;
+      }
+      matrixData.unshift(incomingRow);
+      saveAndSync();
+    }
+  });
+
+  // Restore previous session
+  try {
+    const cachedRows = localStorage.getItem('pm_matrix_rows');
+    const cachedCols = localStorage.getItem('pm_matrix_cols');
+    if (cachedCols) displayColumns = JSON.parse(cachedCols);
+    if (cachedRows) matrixData = JSON.parse(cachedRows);
+    renderTable();
+  } catch {}
+
+  // Clear Table
+  clearBtn?.addEventListener('click', () => {
+    if (confirm('Clear all papers from this current matrix table?')) {
+      matrixData = [];
+      saveAndSync();
+    }
+  });
+
+  // Export File Stream Trigger with Dynamic Payload & Unified Prose Handling
+  async function triggerExport(endpoint: string, fallbackFileName: string) {
+    if (matrixData.length === 0) return;
+
+    try {
+      // Pick up generated prose if available on the DOM
+      const currentProse = (proseContent && proseContent.textContent && proseContent.textContent.trim().length > 0)
+        ? proseContent.textContent.trim()
+        : null;
+
+      const response = await fetch(`${BACKEND_URL}/api/v1/export/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          rows: matrixData, 
+          columns: displayColumns,
+          prose: currentProse
+        }),
+      });
+
+      if (!response.ok) throw new Error('Export generation failed');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fallbackFileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to generate export file. Verify backend is running.');
+    }
+  }
+
+  exportExcelBtn?.addEventListener('click', () => triggerExport('excel', 'Literature_Review_Matrix.xlsx'));
+  exportLatexBtn?.addEventListener('click', () => triggerExport('latex', 'literature_review_matrix.tex'));
+  exportBibtexBtn?.addEventListener('click', () => triggerExport('bibtex', 'references.bib'));
+
+  // NAYA HANDLER: Auto-Draft Prose Generation Trigger
+  draftProseBtn?.addEventListener('click', async () => {
+    if (matrixData.length === 0) {
+      alert('Please upload and synthesize at least one paper first!');
+      return;
+    }
+
+    isDraftingProse = true;
+    draftProseBtn.disabled = true;
+    const originalBtnText = draftProseBtn.innerHTML;
+    draftProseBtn.innerHTML = `
+      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-purple-300 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
+      <span>Synthesizing Literature Review...</span>
+    `;
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/v1/export/synthesize-prose`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rows: matrixData }),
+      });
+
+      if (!response.ok) throw new Error('Prose synthesis request failed');
+
+      const resData = await response.json();
+      proseContent.textContent = resData.prose;
+      proseCard.classList.remove('hidden');
+      proseCard.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      console.error(err);
+      alert('Failed to synthesize related work prose. Check backend terminal logs.');
+    } finally {
+      isDraftingProse = false;
+      draftProseBtn.disabled = false;
+      draftProseBtn.innerHTML = originalBtnText;
+    }
+  });
+
+  // Copy Prose Handler
+  copyProseBtn?.addEventListener('click', () => {
+    if (!proseContent.textContent) return;
+    navigator.clipboard.writeText(proseContent.textContent)
+      .then(() => {
+        copyProseBtn.textContent = 'Copied!';
+        setTimeout(() => {
+          copyProseBtn.textContent = 'Copy Prose';
+        }, 2000);
+      })
+      .catch(() => {
+        copyProseBtn.textContent = 'Failed';
+        setTimeout(() => {
+          copyProseBtn.textContent = 'Copy Prose';
+        }, 2000);
+      });
+  });
+</script>

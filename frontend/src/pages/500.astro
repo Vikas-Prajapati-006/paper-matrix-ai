@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="500 — Synthesis Engine Error">
+  <Header />
+  <main class="flex-1 max-w-2xl mx-auto w-full px-4 flex flex-col items-center justify-center text-center py-24">
+    <div class="h-12 w-12 rounded-xl bg-rose-950/30 border border-rose-800/50 flex items-center justify-center font-mono text-rose-400 text-sm font-bold mb-4">
+      500
+    </div>
+    <h1 class="text-xl font-bold text-zinc-100 mb-2">Synthesis Engine Unavailable</h1>
+    <p class="text-xs text-zinc-400 font-mono max-w-md mb-6 leading-relaxed">
+      An unexpected error occurred while communicating with the document ingestion pipeline. The server might be restarting or experiencing temporary rate restrictions.
+    </p>
+    <div class="flex items-center gap-3">
+      <a
+        href="/"
+        class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors"
+      >
+        Retry Workspace
+      </a>
+      <a
+        href="/contact"
+        class="px-4 py-2 rounded-lg border border-zinc-800 hover:border-zinc-700 bg-zinc-900/60 text-zinc-300 text-xs font-medium transition-colors"
+      >
+        Report Issue
+      </a>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Terms of Service — PaperMatrix AI">
+  <Header />
+  <main class="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-16 text-zinc-300">
+    <div class="border-b border-zinc-800 pb-6 mb-8">
+      <h1 class="text-2xl font-bold text-zinc-100 tracking-tight">Terms of Service</h1>
+      <p class="text-xs font-mono text-zinc-500 mt-1">Effective Date: September 2026</p>
+    </div>
+
+    <div class="space-y-8 text-xs leading-relaxed">
+      <section class="space-y-2">
+        <h2 class="text-sm font-semibold text-zinc-100 uppercase tracking-wider font-mono">1. Permitted Use</h2>
+        <p class="text-zinc-400">
+          PaperMatrix AI is intended for academic literature reviews, systematic mapping studies, and technical paper synthesis. You may use extracted matrices freely in academic thesis work, survey publications, or private engineering research.
+        </p>
+      </section>
+
+      <section class="space-y-2">
+        <h2 class="text-sm font-semibold text-zinc-100 uppercase tracking-wider font-mono">2. Rate Limiting & Fair Use</h2>
+        <p class="text-zinc-400">
+          Users agree not to bypass device rate-limiting limits via proxy rotation, script-based scraping, or simulated browser fingerprint spoofing. Abuse of computational resources may result in persistent client token rejection.
+        </p>
+      </section>
+
+      <section class="space-y-2">
+        <h2 class="text-sm font-semibold text-zinc-100 uppercase tracking-wider font-mono">3. Output Accuracy Disclaimer</h2>
+        <p class="text-zinc-400">
+          While Groq Llama-3.3-70b provides high structural accuracy, users remain responsible for cross-verifying methodological details, statistical claims, and cited findings before official thesis submission or peer-reviewed publication.
+        </p>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

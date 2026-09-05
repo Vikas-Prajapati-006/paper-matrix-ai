@@ -1,0 +1,444 @@
+---
+---
+
+<div class="w-full max-w-3xl mx-auto space-y-4">
+  <!-- Dynamic Column Selector Toolbar -->
+  <div class="bg-zinc-900/40 p-4 rounded-xl border border-zinc-800 backdrop-blur-sm space-y-3">
+    <div class="flex items-center justify-between">
+      <label class="text-xs font-mono text-zinc-300 flex items-center gap-2">
+        <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+        Target Matrix Columns
+      </label>
+      <button
+        id="reset-columns-btn"
+        type="button"
+        class="text-[11px] font-mono text-zinc-500 hover:text-indigo-400 transition-colors"
+      >
+        Reset to Default
+      </button>
+    </div>
+
+    <!-- Active Column Chips List -->
+    <div id="column-chips-container" class="flex flex-wrap gap-1.5">
+      <!-- Chips populated dynamically -->
+    </div>
+
+    <!-- Add Custom Column Input -->
+    <div class="flex items-center gap-2 pt-1">
+      <input
+        type="text"
+        id="custom-column-input"
+        placeholder="Add custom column (e.g. dataset, hardware, baseline)..."
+        class="flex-1 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-950/60 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-indigo-500/60 font-mono"
+      />
+      <button
+        type="button"
+        id="add-column-btn"
+        class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-zinc-200 transition-colors"
+      >
+        + Add Column
+      </button>
+    </div>
+  </div>
+
+  <!-- Upload Surface Card -->
+  <div
+    id="drop-zone"
+    class="relative group rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/50 hover:border-indigo-500/50 transition-all duration-300 p-8 sm:p-12 text-center cursor-pointer overflow-hidden shadow-2xl backdrop-blur-sm"
+  >
+    <div class="absolute -inset-px bg-gradient-to-b from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+
+    <input
+      type="file"
+      id="file-input"
+      accept="application/pdf"
+      multiple
+      class="hidden"
+    />
+
+    <!-- Default Upload State -->
+    <div id="upload-idle-state" class="flex flex-col items-center justify-center space-y-4">
+      <div class="h-14 w-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-indigo-400 group-hover:border-indigo-500/30 group-hover:scale-105 transition-all duration-300 shadow-inner">
+        <svg class="w-6 h-6 stroke-[1.75]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+        </svg>
+      </div>
+
+      <div class="space-y-1.5">
+        <p class="text-sm font-medium text-zinc-200">
+          Drop research paper PDFs here (Batch supported), or <span class="text-indigo-400 group-hover:underline">browse</span>
+        </p>
+        <p class="text-xs text-zinc-500 font-mono">
+          Accepts IEEE, ACM, arXiv, or Nature format • Max 15MB per file
+        </p>
+      </div>
+
+      <!-- Quick Demo Samples Button -->
+      <div class="pt-2">
+        <button
+          type="button"
+          id="try-samples-btn"
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 text-xs font-mono transition-all hover:border-indigo-500/50 shadow-sm"
+        >
+          <span>⚡ Try with sample papers:</span>
+          <span class="text-zinc-400 underline decoration-indigo-500/40">Attention & BERT</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Processing State -->
+    <div id="upload-processing-state" class="hidden flex flex-col items-center justify-center space-y-4 py-2">
+      <div class="relative h-12 w-12 flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full border-2 border-indigo-500/20 border-t-indigo-500 animate-spin"></div>
+        <span class="text-[10px] font-mono text-indigo-400 font-semibold">AI</span>
+      </div>
+
+      <div class="space-y-1">
+        <p id="processing-status-text" class="text-sm font-medium text-zinc-200 animate-pulse">
+          Parsing targeted sections...
+        </p>
+        <p id="processing-sub-text" class="text-xs text-zinc-500 font-mono">
+          Extracting dynamic matrix attributes via Groq...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Staged Batch Queue UI -->
+  <div id="batch-queue-container" class="hidden bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 space-y-3">
+    <div class="flex items-center justify-between text-xs font-mono">
+      <span id="queue-counter-text" class="text-zinc-300 font-semibold">0 papers queued</span>
+      <button id="clear-queue-btn" type="button" class="text-zinc-500 hover:text-rose-400 transition-colors">Clear Queue</button>
+    </div>
+
+    <ul id="queue-file-items" class="divide-y divide-zinc-800/60 max-h-40 overflow-y-auto pr-1 text-xs font-mono">
+      <!-- Staged file list items -->
+    </ul>
+
+    <button
+      id="start-batch-btn"
+      type="button"
+      class="w-full py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium font-sans transition-all active:scale-[0.99] shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2"
+    >
+      <span>Synthesize Staged Papers</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Notification Banner -->
+  <div id="upload-feedback" class="hidden mt-3 text-xs font-mono text-center p-2.5 rounded-lg border"></div>
+</div>
+
+<script>
+  import { getDeviceFingerprint } from '../scripts/fingerprint';
+
+  const BACKEND_URL = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
+  const DEFAULT_COLUMNS = [
+    'title',
+    'authors',
+    'year',
+    'problem_statement',
+    'methodology',
+    'key_findings',
+    'limitations',
+    'future_scope'
+  ];
+
+  let currentColumns: string[] = [...DEFAULT_COLUMNS];
+  let stagedFiles: File[] = [];
+
+  const dropZone = document.getElementById('drop-zone') as HTMLDivElement;
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const idleState = document.getElementById('upload-idle-state') as HTMLDivElement;
+  const processingState = document.getElementById('upload-processing-state') as HTMLDivElement;
+  const statusText = document.getElementById('processing-status-text') as HTMLParagraphElement;
+  const subStatusText = document.getElementById('processing-sub-text') as HTMLParagraphElement;
+  const feedback = document.getElementById('upload-feedback') as HTMLDivElement;
+
+  // Demo sample trigger button
+  const trySamplesBtn = document.getElementById('try-samples-btn') as HTMLButtonElement;
+
+  // Chips elements
+  const chipsContainer = document.getElementById('column-chips-container') as HTMLDivElement;
+  const customInput = document.getElementById('custom-column-input') as HTMLInputElement;
+  const addColBtn = document.getElementById('add-column-btn') as HTMLButtonElement;
+  const resetColsBtn = document.getElementById('reset-columns-btn') as HTMLButtonElement;
+
+  // Queue elements
+  const queueCard = document.getElementById('batch-queue-container') as HTMLDivElement;
+  const queueCounter = document.getElementById('queue-counter-text') as HTMLSpanElement;
+  const queueList = document.getElementById('queue-file-items') as HTMLUListElement;
+  const clearQueueBtn = document.getElementById('clear-queue-btn') as HTMLButtonElement;
+  const startBatchBtn = document.getElementById('start-batch-btn') as HTMLButtonElement;
+
+  function renderChips() {
+    chipsContainer.innerHTML = '';
+    currentColumns.forEach((col, index) => {
+      const chip = document.createElement('span');
+      chip.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono border border-zinc-700 bg-zinc-800 text-zinc-300';
+      
+      const label = document.createElement('span');
+      label.textContent = col.replace(/_/g, ' ');
+      chip.appendChild(label);
+
+      if (currentColumns.length > 2) {
+        const delBtn = document.createElement('button');
+        delBtn.innerHTML = '&times;';
+        delBtn.className = 'text-zinc-500 hover:text-rose-400 font-bold ml-1 text-xs';
+        delBtn.onclick = () => {
+          currentColumns.splice(index, 1);
+          renderChips();
+        };
+        chip.appendChild(delBtn);
+      }
+
+      chipsContainer.appendChild(chip);
+    });
+
+    window.dispatchEvent(new CustomEvent('columns-updated', { detail: currentColumns }));
+  }
+
+  function addColumn() {
+    const val = customInput.value.trim().toLowerCase().replace(/\s+/g, '_');
+    if (val && !currentColumns.includes(val)) {
+      currentColumns.push(val);
+      renderChips();
+    }
+    customInput.value = '';
+  }
+
+  addColBtn?.addEventListener('click', addColumn);
+  customInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addColumn();
+    }
+  });
+
+  resetColsBtn?.addEventListener('click', () => {
+    currentColumns = [...DEFAULT_COLUMNS];
+    renderChips();
+  });
+
+  function showFeedback(msg: string, isError = false) {
+    if (!feedback) return;
+    feedback.textContent = msg;
+    feedback.className = `mt-3 text-xs font-mono text-center p-2.5 rounded-lg border ${
+      isError 
+        ? 'bg-rose-950/40 text-rose-300 border-rose-800/60' 
+        : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60'
+    }`;
+    feedback.classList.remove('hidden');
+  }
+
+  function clearFeedback() {
+    if (feedback) feedback.classList.add('hidden');
+  }
+
+  function setProcessing(active: boolean, message = 'Parsing targeted sections...', subText = '') {
+    if (!idleState || !processingState) return;
+    if (active) {
+      idleState.classList.add('hidden');
+      processingState.classList.remove('hidden');
+      if (statusText) statusText.textContent = message;
+      if (subStatusText && subText) subStatusText.textContent = subText;
+      if (startBatchBtn) startBatchBtn.disabled = true;
+    } else {
+      idleState.classList.remove('hidden');
+      processingState.classList.add('hidden');
+      if (startBatchBtn) startBatchBtn.disabled = false;
+    }
+  }
+
+  function updateQueueDisplay() {
+    if (stagedFiles.length === 0) {
+      queueCard.classList.add('hidden');
+      return;
+    }
+
+    queueCard.classList.remove('hidden');
+    queueCounter.textContent = `${stagedFiles.length} ${stagedFiles.length === 1 ? 'paper queued' : 'papers queued'}`;
+    queueList.innerHTML = '';
+
+    stagedFiles.forEach((f, idx) => {
+      const li = document.createElement('li');
+      li.className = 'py-2 flex items-center justify-between text-zinc-300';
+      const sizeMb = (f.size / (1024 * 1024)).toFixed(2);
+      
+      li.innerHTML = `
+        <div class="flex items-center gap-2 truncate pr-2">
+          <span class="text-indigo-400 text-xs">PDF</span>
+          <span class="truncate">${f.name}</span>
+          <span class="text-zinc-600 text-[10px]">(${sizeMb} MB)</span>
+        </div>
+        <button data-i="${idx}" class="text-zinc-500 hover:text-rose-400 px-1 font-mono text-xs remove-queue-btn">&times;</button>
+      `;
+      queueList.appendChild(li);
+    });
+
+    queueList.querySelectorAll('.remove-queue-btn').forEach((b) => {
+      b.addEventListener('click', (ev) => {
+        const targetIdx = Number((ev.currentTarget as HTMLElement).getAttribute('data-i'));
+        stagedFiles.splice(targetIdx, 1);
+        updateQueueDisplay();
+      });
+    });
+  }
+
+  function handleIncomingFiles(fileList: FileList | File[]) {
+    clearFeedback();
+    const valid = Array.from(fileList).filter((f) => {
+      if (!f.name.endsWith('.pdf') && f.type !== 'application/pdf') {
+        showFeedback(`Skipped non-PDF: ${f.name}`, true);
+        return false;
+      }
+      if (f.size > 15 * 1024 * 1024) {
+        showFeedback(`File exceeds 15MB: ${f.name}`, true);
+        return false;
+      }
+      return true;
+    });
+
+    stagedFiles.push(...valid);
+    updateQueueDisplay();
+  }
+
+  // Load sample PDFs directly into staged queue
+  async function loadSamplePapers() {
+    clearFeedback();
+    showFeedback('Loading sample benchmark papers...', false);
+
+    const sampleFiles = [
+      { name: 'attention.pdf', path: '/samples/attention.pdf' },
+      { name: 'bert.pdf', path: '/samples/bert.pdf' }
+    ];
+
+    try {
+      const loaded: File[] = [];
+      for (const sample of sampleFiles) {
+        const res = await fetch(sample.path);
+        if (!res.ok) throw new Error(`Could not fetch ${sample.name}`);
+        const blob = await res.blob();
+        const file = new File([blob], sample.name, { type: 'application/pdf' });
+        loaded.push(file);
+      }
+
+      handleIncomingFiles(loaded);
+      showFeedback('Sample papers loaded into queue! Click Synthesize Staged Papers to begin.', false);
+    } catch (err: any) {
+      console.error(err);
+      showFeedback(`Failed to load sample papers: ${err.message}`, true);
+    }
+  }
+
+  trySamplesBtn?.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent trigger dropzone file picker
+    loadSamplePapers();
+  });
+
+  clearQueueBtn?.addEventListener('click', () => {
+    stagedFiles = [];
+    updateQueueDisplay();
+  });
+
+  async function executeBatch() {
+    if (stagedFiles.length === 0) return;
+
+    clearFeedback();
+    const total = stagedFiles.length;
+    let completed = 0;
+    const deviceId = await getDeviceFingerprint();
+
+    setProcessing(true, 'Initializing synthesis...', `0 of ${total} processed`);
+    // Skeleton loading event trigger for MatrixTable
+    window.dispatchEvent(new CustomEvent('synthesis-started'));
+
+    for (let i = 0; i < stagedFiles.length; i++) {
+      const file = stagedFiles[i];
+      setProcessing(true, `Synthesizing: "${file.name}"`, `Processing paper ${i + 1} of ${total}`);
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('fingerprint', deviceId);
+        formData.append('columns', JSON.stringify(currentColumns));
+
+        const response = await fetch(`${BACKEND_URL}/api/v1/parse`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.status === 429) {
+          showFeedback('Daily free quota reached. Process stopped for remaining papers.', true);
+          break;
+        }
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.detail || `Upload failed with HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+        const parsedRow = result.row || result.data || result;
+
+        window.dispatchEvent(new CustomEvent('paper-parsed', { 
+          detail: { row: parsedRow, columns: currentColumns } 
+        }));
+        window.dispatchEvent(new CustomEvent('quota-updated'));
+        completed++;
+
+      } catch (err: any) {
+        console.error(err);
+        showFeedback(`Error parsing ${file.name}: ${err.message}`, true);
+      }
+    }
+
+    setProcessing(false);
+    // Stop skeleton loading event for MatrixTable
+    window.dispatchEvent(new CustomEvent('synthesis-ended'));
+    showFeedback(`Batch complete: ${completed} of ${total} papers synthesized successfully.`, false);
+    stagedFiles = [];
+    updateQueueDisplay();
+  }
+
+  startBatchBtn?.addEventListener('click', executeBatch);
+
+  // Dropzone events
+  dropZone?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('#batch-queue-container')) return;
+    if ((e.target as HTMLElement).closest('#try-samples-btn')) return;
+    fileInput?.click();
+  });
+
+  fileInput?.addEventListener('change', (e) => {
+    const target = e.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      handleIncomingFiles(target.files);
+    }
+  });
+
+  dropZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-indigo-500', 'bg-zinc-900/60');
+  });
+
+  ['dragleave', 'dragend'].forEach((eventName) => {
+    dropZone?.addEventListener(eventName, () => {
+      dropZone.classList.remove('border-indigo-500', 'bg-zinc-900/60');
+    });
+  });
+
+  dropZone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-indigo-500', 'bg-zinc-900/60');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleIncomingFiles(e.dataTransfer.files);
+    }
+  });
+
+  // Init default chips
+  renderChips();
+</script>

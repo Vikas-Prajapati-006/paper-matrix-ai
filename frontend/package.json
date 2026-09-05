@@ -1,0 +1,25 @@
+{
+  "name": "paper-matrix-ai-frontend",
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/tailwind": "^5.1.5",
+    "@fingerprintjs/fingerprintjs": "^4.5.1",
+    "astro": "^4.16.18",
+    "clsx": "^2.1.1",
+    "lucide-astro": "latest",
+    "tailwind-merge": "^2.6.0",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

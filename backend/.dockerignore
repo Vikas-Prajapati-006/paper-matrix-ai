@@ -1,0 +1,29 @@
+# Local Python cache & environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Sensitive files
+.env
+.env.*
+*.env
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+tests/
+
+# Build & Metadata
+*.egg-info/
+build/
+dist/
+
+# Git & OS artifacts
+.git/
+.gitignore
+.DS_Store
+*.log

@@ -1,0 +1,166 @@
+---
+import { languages } from '../i18n/ui';
+import { getLangFromUrl } from '../i18n/utils';
+
+const currentLang = getLangFromUrl(Astro.url);
+const langPrefix = currentLang === 'en' ? '' : `/${currentLang}`;
+---
+
+<header class="sticky top-0 z-50 w-full border-b border-zinc-800/80 bg-[#09090b]/80 backdrop-blur-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <!-- Brand Title -->
+    <a href={currentLang === 'en' ? '/' : `/${currentLang}/`} class="flex items-center gap-2.5 group">
+      <div class="h-8 w-8 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-mono font-bold text-base transition-colors group-hover:border-indigo-400 group-hover:bg-indigo-500/20">
+        P
+      </div>
+      <div class="flex flex-col">
+        <span class="text-sm font-semibold tracking-tight text-zinc-100 flex items-center gap-1.5">
+          PaperMatrix <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700/60">AI</span>
+        </span>
+        <span class="text-[11px] text-zinc-500 font-mono">Literature Survey Engine</span>
+      </div>
+    </a>
+
+    <!-- Quota Counter & Status -->
+    <div class="flex items-center gap-3">
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden sm:flex items-center gap-3 mr-1">
+        <a 
+          href={`${langPrefix}/privacy`} 
+          class="text-xs text-zinc-400 hover:text-zinc-200 transition-colors font-mono"
+        >
+          Privacy
+        </a>
+        <a 
+          href={`${langPrefix}/terms`} 
+          class="text-xs text-zinc-400 hover:text-zinc-200 transition-colors font-mono"
+        >
+          Terms
+        </a>
+        <a 
+          href="/contact" 
+          class="text-xs text-zinc-400 hover:text-zinc-200 transition-colors font-mono"
+        >
+          Contact
+        </a>
+      </nav>
+
+      <!-- Language Selector -->
+      <div class="relative inline-flex items-center">
+        <select
+          id="lang-selector"
+          class="appearance-none bg-zinc-900/80 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-700 text-zinc-300 text-xs font-mono rounded-lg px-2.5 py-1.5 pr-6 cursor-pointer outline-none transition-colors focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/40"
+        >
+          {Object.entries(languages).map(([code, label]) => (
+            <option value={code} selected={code === currentLang} class="bg-[#09090b] text-zinc-300">
+              {label} ({code.toUpperCase()})
+            </option>
+          ))}
+        </select>
+        <div class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 text-[10px]">
+          ▼
+        </div>
+      </div>
+
+      <div id="quota-badge" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/60 text-xs font-mono text-zinc-400">
+        <span id="quota-indicator" class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="quota-text">Checking quota...</span>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-label="Toggle Navigation Menu"
+        class="sm:hidden p-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown Drawer -->
+  <div id="mobile-menu-dropdown" class="hidden sm:hidden border-t border-zinc-800/80 bg-[#09090b] px-4 py-3 space-y-2">
+    <a 
+      href={`${langPrefix}/privacy`} 
+      class="block text-xs text-zinc-400 hover:text-zinc-200 font-mono py-1.5 transition-colors"
+    >
+      Privacy
+    </a>
+    <a 
+      href={`${langPrefix}/terms`} 
+      class="block text-xs text-zinc-400 hover:text-zinc-200 font-mono py-1.5 transition-colors"
+    >
+      Terms
+    </a>
+    <a 
+      href="/contact" 
+      class="block text-xs text-zinc-400 hover:text-zinc-200 font-mono py-1.5 transition-colors"
+    >
+      Contact
+    </a>
+  </div>
+</header>
+
+<script>
+  import { fetchQuotaStatus } from '../scripts/fingerprint';
+
+  async function updateHeaderQuota() {
+    const quotaText = document.getElementById('quota-text');
+    const quotaIndicator = document.getElementById('quota-indicator');
+
+    try {
+      const status = await fetchQuotaStatus();
+      if (quotaText && quotaIndicator) {
+        quotaText.textContent = `${status.remaining}/${status.total} Credits Left`;
+        if (status.remaining === 0) {
+          quotaIndicator.className = 'h-2 w-2 rounded-full bg-rose-500';
+        } else {
+          quotaIndicator.className = 'h-2 w-2 rounded-full bg-emerald-500';
+        }
+      }
+    } catch {
+      if (quotaText) quotaText.textContent = '3/3 Credits';
+    }
+  }
+
+  // Load quota status on hydration
+  updateHeaderQuota();
+
+  // Listen for custom quota update events triggered after parsing
+  window.addEventListener('quota-updated', updateHeaderQuota);
+
+  // Handle language switching
+  const langSelector = document.getElementById('lang-selector') as HTMLSelectElement | null;
+  if (langSelector) {
+    langSelector.addEventListener('change', (e) => {
+      const targetLang = (e.target as HTMLSelectElement).value;
+      const pathname = window.location.pathname;
+
+      // Split path to isolate existing language prefix
+      const parts = pathname.split('/').filter(Boolean);
+      const knownLangs = ['es', 'de'];
+
+      if (knownLangs.includes(parts[0])) {
+        parts.shift(); // Remove current non-en prefix
+      }
+
+      const remainingPath = parts.length > 0 ? parts.join('/') : '';
+
+      if (targetLang === 'en') {
+        window.location.pathname = remainingPath ? `/${remainingPath}` : '/';
+      } else {
+        window.location.pathname = remainingPath ? `/${targetLang}/${remainingPath}` : `/${targetLang}/`;
+      }
+    });
+  }
+
+  // Handle mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
+  mobileMenuBtn?.addEventListener('click', () => {
+    mobileMenuDropdown?.classList.toggle('hidden');
+  });
+</script>

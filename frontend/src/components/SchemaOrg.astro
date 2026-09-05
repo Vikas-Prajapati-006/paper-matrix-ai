@@ -1,0 +1,40 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  url?: string;
+}
+
+const {
+  title = "PaperMatrix AI — Literature Review Synthesis Engine",
+  description = "Convert research paper PDFs into structured academic matrices. Export to LaTeX and Excel.",
+  url = "https://papermatrix.ai"
+} = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "PaperMatrix AI",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": description,
+      "url": url
+    },
+    {
+      "@type": "WebSite",
+      "url": url,
+      "name": title,
+      "description": description
+    }
+  ]
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

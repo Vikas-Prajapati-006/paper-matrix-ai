@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import FileUploadZone from '../../components/FileUploadZone.astro';
+import MatrixTable from '../../components/MatrixTable.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const toolsData = [
+    {
+      slug: 'arxiv-to-latex-table',
+      title: 'ArXiv PDF to LaTeX Literature Table Generator | PaperMatrix AI',
+      metaDescription: 'Extract ArXiv papers directly into formatted, academic-ready LaTeX matrices. Perfect for CS, AI, and ML research literature surveys.',
+      h1: 'Convert ArXiv Papers into LaTeX Literature Tables',
+      subtitle: 'Instantly parse ArXiv methodologies, findings, and architectures into error-free LaTeX tabular code.'
+    },
+    {
+      slug: 'ieee-literature-survey-generator',
+      title: 'IEEE Literature Survey Matrix Generator | PaperMatrix AI',
+      metaDescription: 'Automate IEEE research paper comparison tables. Synthesize problem statements, datasets, metrics, and limitations in seconds.',
+      h1: 'Automate IEEE Literature Survey Matrices',
+      subtitle: 'Build publication-grade comparative matrices for IEEE transactions, conferences, and degree dissertations.'
+    },
+    {
+      slug: 'research-paper-comparison-matrix',
+      title: 'Research Paper Comparison Matrix Maker | PaperMatrix AI',
+      metaDescription: 'Compare multiple research papers side-by-side. Extract parameters, benchmarks, datasets, and baseline models automatically.',
+      h1: 'Side-by-Side Research Paper Comparison Matrix',
+      subtitle: 'Extract key differences across multiple papers into structured rows with custom parameters.'
+    },
+    {
+      slug: 'systematic-literature-review-matrix',
+      title: 'Systematic Literature Review (SLR) Matrix Tool | PaperMatrix AI',
+      metaDescription: 'Streamline your systematic literature review workflow. Extract extraction attributes, gaps, and outcomes into Excel & LaTeX.',
+      h1: 'Systematic Literature Review (SLR) Matrix Tool',
+      subtitle: 'Synthesize papers systematically with zero prompt engineering. Export directly to Excel and LaTeX.'
+    },
+    {
+      slug: 'research-gap-analyzer-matrix',
+      title: 'Research Gap Analysis & Literature Matrix | PaperMatrix AI',
+      metaDescription: 'Identify open challenges and research gaps across multiple papers automatically into a structured survey matrix.',
+      h1: 'Automate Research Gap & Literature Analysis',
+      subtitle: 'Extract unresolved limitations and future scope from papers to highlight your novel contribution.'
+    },
+    {
+      slug: 'acm-paper-synthesis-matrix',
+      title: 'ACM Digital Library Survey Matrix Generator | PaperMatrix AI',
+      metaDescription: 'Parse ACM conference and journal PDFs into structured literature tables. Export to Excel and LaTeX seamlessly.',
+      h1: 'ACM Research Paper Synthesis Matrix',
+      subtitle: 'Quickly organize computing, systems, and AI papers from ACM Digital Library into tabular formats.'
+    },
+    {
+      slug: 'phd-dissertation-literature-survey',
+      title: 'PhD Dissertation Literature Review Matrix Tool | PaperMatrix AI',
+      metaDescription: 'Structured matrix builder for PhD theses and masters dissertations. Synthesize dozens of papers with ease.',
+      h1: 'PhD Dissertation Literature Survey Tool',
+      subtitle: 'Organize foundational background literature, baselines, and benchmarks for your thesis chapters.'
+    },
+    {
+      slug: 'sciencedirect-paper-matrix',
+      title: 'ScienceDirect & Springer Paper Matrix Generator | PaperMatrix AI',
+      metaDescription: 'Convert Elsevier ScienceDirect and Springer research PDFs into publication-ready comparative tables.',
+      h1: 'ScienceDirect & Springer Literature Matrix',
+      subtitle: 'Extract methodologies, sample sizes, and metrics from peer-reviewed journal papers instantly.'
+    }
+  ];
+
+  return toolsData.map((tool) => ({
+    params: { slug: tool.slug },
+    props: { tool },
+  }));
+}
+
+const { tool } = Astro.props;
+---
+
+<BaseLayout title={tool.title} description={tool.metaDescription}>
+  <div class="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col justify-between selection:bg-indigo-500/20 selection:text-indigo-300">
+    <Header />
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full space-y-10">
+      <!-- Dynamic SEO Hero Header -->
+      <div class="text-center space-y-4 max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-950/20 text-[11px] font-mono text-indigo-400">
+          <span class="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+          <span>Academic Research Workflow</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-zinc-100 leading-tight">
+          {tool.h1}
+        </h1>
+
+        <p class="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto">
+          {tool.subtitle}
+        </p>
+      </div>
+
+      <!-- Core Engine Components -->
+      <FileUploadZone />
+      <MatrixTable />
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>
