@@ -4,32 +4,62 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 ---
 
-<BaseLayout title="Contact — PaperMatrix AI">
+<BaseLayout title="Contact & Support — PaperMatrix AI">
   <Header />
 
   <main class="flex-1 max-w-xl mx-auto w-full px-4 sm:px-6 py-16 flex flex-col items-center">
     <div class="text-center space-y-2 mb-8">
-      <h1 class="text-2xl font-bold text-zinc-100 tracking-tight">Contact</h1>
+      <h1 class="text-2xl font-bold text-zinc-100 tracking-tight">Contact & Support</h1>
       <p class="text-xs text-zinc-400 font-mono">
-        Questions about synthesis accuracy, API access, or rate limits? Reach out directly.
+        Questions about synthesis accuracy or rate limits? Reach out directly.
       </p>
     </div>
 
-    <div class="w-full bg-zinc-900/40 p-6 sm:p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm shadow-xl space-y-6">
+    <form class="w-full space-y-4 bg-zinc-900/40 p-6 sm:p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm shadow-xl">
       <div class="space-y-1.5">
-        <label class="block text-xs font-mono text-zinc-300">Direct Support</label>
-        <div class="p-3 rounded-lg border border-zinc-800 bg-zinc-950/60 text-xs text-zinc-300 font-mono select-all">
-          contact@papermatrix.ai
-        </div>
+        <label for="email" class="block text-xs font-mono text-zinc-300">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          placeholder="researcher@university.edu"
+          class="w-full px-3.5 py-2.5 rounded-lg border border-zinc-800 bg-zinc-950/60 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/30 transition-all font-mono"
+        />
       </div>
 
       <div class="space-y-1.5">
-        <label class="block text-xs font-mono text-zinc-300">GitHub & Feedback</label>
-        <p class="text-xs text-zinc-400 font-mono leading-relaxed">
-          For feature requests, edge-case PDF ingestion issues, or bugs, feel free to open an issue or pull request on the repository.
-        </p>
+        <label for="subject" class="block text-xs font-mono text-zinc-300">Inquiry Type</label>
+        <select
+          id="subject"
+          name="subject"
+          class="w-full px-3.5 py-2.5 rounded-lg border border-zinc-800 bg-zinc-950/60 text-xs text-zinc-200 focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/30 transition-all font-mono"
+        >
+          <option value="feedback">Parsing Feedback / Extraction Bug</option>
+          <option value="quota">Academic High-Volume Access</option>
+          <option value="other">General Inquiry</option>
+        </select>
       </div>
-    </div>
+
+      <div class="space-y-1.5">
+        <label for="message" class="block text-xs font-mono text-zinc-300">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          required
+          placeholder="Describe your query or provide the DOI of the paper that had issues..."
+          class="w-full px-3.5 py-2.5 rounded-lg border border-zinc-800 bg-zinc-950/60 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/30 transition-all font-mono resize-none"
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium font-sans transition-all active:scale-[0.99] shadow-lg shadow-indigo-600/20"
+      >
+        Send Message
+      </button>
+    </form>
   </main>
 
   <Footer />
