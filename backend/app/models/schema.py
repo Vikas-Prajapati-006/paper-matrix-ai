@@ -56,25 +56,3 @@ class ProseSynthesisResponse(BaseModel):
     """Generated Related Work prose response."""
     status: str = "success"
     prose: str
-
-
-# --- CONTACT SCHEMA (Added for secure user inquiries) ---
-class ContactMessageRequest(BaseModel):
-    """Validated payload for incoming user contact & feedback messages."""
-    model_config = ConfigDict(extra="ignore")
-
-    email: str = Field(
-        ...,
-        pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$",
-        max_length=150,
-        description="User's contact email"
-    )
-    subject: str = Field(default="feedback", max_length=50, description="Inquiry category")
-    message: str = Field(..., min_length=5, max_length=2500, description="Inquiry content")
-    honeypot: Optional[str] = Field(default="", max_length=100, description="Anti-spam bot trap")
-
-
-class ContactMessageResponse(BaseModel):
-    """Response status for contact form submission."""
-    status: str = "success"
-    message: str
