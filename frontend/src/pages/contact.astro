@@ -15,7 +15,16 @@ import Footer from '../components/Footer.astro';
       </p>
     </div>
 
-    <form class="w-full space-y-4 bg-zinc-900/40 p-6 sm:p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm shadow-xl">
+    <!-- Status notification banner -->
+    <div id="form-feedback" class="w-full mb-4 hidden px-4 py-3 rounded-lg text-xs font-mono transition-all"></div>
+
+    <form id="contact-form" class="w-full space-y-4 bg-zinc-900/40 p-6 sm:p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm shadow-xl">
+      <!-- Anti-spam invisible honeypot field -->
+      <div class="hidden" aria-hidden="true" style="display:none;">
+        <label for="honeypot">Leave blank</label>
+        <input type="text" id="honeypot" name="honeypot" tabindex="-1" autocomplete="off" />
+      </div>
+
       <div class="space-y-1.5">
         <label for="email" class="block text-xs font-mono text-zinc-300">Email Address</label>
         <input
@@ -55,7 +64,8 @@ import Footer from '../components/Footer.astro';
 
       <button
         type="submit"
-        class="w-full py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium font-sans transition-all active:scale-[0.99] shadow-lg shadow-indigo-600/20"
+        id="submit-btn"
+        class="w-full py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium font-sans transition-all active:scale-[0.99] shadow-lg shadow-indigo-600/20 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
       >
         Send Message
       </button>
@@ -64,3 +74,58 @@ import Footer from '../components/Footer.astro';
 
   <Footer />
 </BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const feedback = document.getElementById('form-feedback') as HTMLDivElement | null;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+
+  // Environment variable configured during Cloudflare build
+  const API_URL = import.meta.env.PUBLIC_API_URL || 'https://paper-matrix-backend.onrender.com';
+
+  if (form && feedback && submitBtn) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const email = formData.get('email') as string;
+      const subject = formData.get('subject') as string;
+      const message = formData.get('message') as string;
+      const honeypot = (formData.get('honeypot') as string) || '';
+
+      // UI Loading State
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Sending...';
+      feedback.className = 'w-full mb-4 hidden px-4 py-3 rounded-lg text-xs font-mono transition-all';
+
+      try {
+        const res = await fetch(`${API_URL}/api/v1/contact`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            subject,
+            message,
+            honeypot
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to send message');
+        }
+
+        feedback.innerText = '✓ Message sent successfully! We will get back to you soon.';
+        feedback.className = 'w-full mb-4 block px-4 py-3 rounded-lg text-xs font-mono bg-emerald-950/60 border border-emerald-800 text-emerald-300';
+        form.reset();
+      } catch (err) {
+        feedback.innerText = '✕ Unable to send message. Please try again later.';
+        feedback.className = 'w-full mb-4 block px-4 py-3 rounded-lg text-xs font-mono bg-rose-950/60 border border-rose-800 text-rose-300';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Send Message';
+      }
+    });
+  }
+</script>
