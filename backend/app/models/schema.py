@@ -1,5 +1,5 @@
 from typing import List, Optional, Any, Dict, Union
-from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class PaperMatrixRow(BaseModel):
@@ -63,7 +63,12 @@ class ContactMessageRequest(BaseModel):
     """Validated payload for incoming user contact & feedback messages."""
     model_config = ConfigDict(extra="ignore")
 
-    email: EmailStr = Field(..., max_length=150, description="User's contact email")
+    email: str = Field(
+        ...,
+        pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$",
+        max_length=150,
+        description="User's contact email"
+    )
     subject: str = Field(default="feedback", max_length=50, description="Inquiry category")
     message: str = Field(..., min_length=5, max_length=2500, description="Inquiry content")
     honeypot: Optional[str] = Field(default="", max_length=100, description="Anti-spam bot trap")
