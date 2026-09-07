@@ -15,7 +15,13 @@ import Footer from '../components/Footer.astro';
       </p>
     </div>
 
-    <form class="w-full space-y-4 bg-zinc-900/40 p-6 sm:p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm shadow-xl">
+    <form 
+      action="https://api.web3forms.com/submit" 
+      method="POST" 
+      class="w-full space-y-4 bg-zinc-900/40 p-6 sm:p-8 rounded-2xl border border-zinc-800/80 backdrop-blur-sm shadow-xl"
+    >
+      <input type="hidden" name="access_key" value={import.meta.env.PUBLIC_WEB3FORMS_KEY} />
+
       <div class="space-y-1.5">
         <label for="email" class="block text-xs font-mono text-zinc-300">Email Address</label>
         <input
