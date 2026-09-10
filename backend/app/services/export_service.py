@@ -21,7 +21,6 @@ class ExportService:
         val = val.replace("‘", "`").replace("’", "'")
 
         # 3. Unicode ligatures and spaces that crash pdflatex
-        val = val.replace("Ł", r"\L{}").replace("ł", r"\l{}")
         val = val.replace("\u2011", "-")   # Non-breaking hyphen
         val = val.replace("\u2013", "--")  # En-dash
         val = val.replace("\u2014", "---") # Em-dash
@@ -30,6 +29,7 @@ class ExportService:
 
         # 4. Reserved LaTeX syntax escaping (Order matters: reserved chars escaped directly)
         replacements = {
+            "\\": r"\textbackslash{}",
             "&": r"\&",
             "%": r"\%",
             "$": r"\$",
@@ -45,18 +45,37 @@ class ExportService:
         pattern = re.compile("|".join(re.escape(k) for k in replacements.keys()))
         val = pattern.sub(lambda m: replacements[m.group(0)], val)
 
+        # 5. Handle special non-ASCII letters AFTER reserved escaping so braces stay intact
+        val = val.replace("Ł", r"{\L}").replace("ł", r"{\l}")
+
         # Clean multiple whitespaces
         val = re.sub(r"\s+", " ", val).strip()
 
         return val
 
     @staticmethod
+    def _row_to_dict(row: Any) -> dict:
+        """Safely extract dictionary from Pydantic model or raw dict."""
+        if hasattr(row, "model_dump"):
+            return row.model_dump()
+        elif hasattr(row, "dict"):
+            return row.dict()
+        elif isinstance(row, dict):
+            return row
+        elif hasattr(row, "__dict__"):
+            return row.__dict__
+        return {}
+
+    @staticmethod
     def generate_excel(rows: List[Union[PaperMatrixRow, Any]]) -> io.BytesIO:
         """Converts extracted rows to an in-memory formatted Excel document."""
-        data = [row.model_dump() if hasattr(row, "model_dump") else row for row in rows]
-        df = pd.DataFrame(data)
+        if not rows:
+            df = pd.DataFrame()
+        else:
+            data = [ExportService._row_to_dict(r) for r in rows]
+            df = pd.DataFrame(data)
 
-        # Rename columns to publication-ready headers
+        # Map default keys to publication headers if present, else title-case custom keys
         column_mapping = {
             "title": "Paper Title",
             "authors": "Authors",
@@ -67,18 +86,19 @@ class ExportService:
             "limitations": "Limitations",
             "future_scope": "Future Scope"
         }
-        df.rename(columns=column_mapping, inplace=True)
+        df.rename(columns={k: v for k, v in column_mapping.items() if k in df.columns}, inplace=True)
+        df.columns = [str(col).replace("_", " ").title() for col in df.columns]
 
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine="openpyxl") as writer:
             df.to_excel(writer, index=False, sheet_name="Literature Survey")
 
-            # Auto-fit column widths
-            worksheet = writer.sheets["Literature Survey"]
-            for col in worksheet.columns:
-                max_len = max(len(str(cell.value or "")) for cell in col)
-                col_letter = col[0].column_letter
-                worksheet.column_dimensions[col_letter].width = min(max(max_len + 3, 12), 45)
+            if not df.empty:
+                worksheet = writer.sheets["Literature Survey"]
+                for col in worksheet.columns:
+                    max_len = max(len(str(cell.value or "")) for cell in col)
+                    col_letter = col[0].column_letter
+                    worksheet.column_dimensions[col_letter].width = min(max(max_len + 3, 12), 45)
 
         output.seek(0)
         return output
@@ -91,7 +111,6 @@ class ExportService:
         # Agar auto-drafted prose exist karta hai toh use Section 2 banakar add karo
         if prose and prose.strip():
             safe_prose = prose.strip()
-            # Markdown bold tags ko LaTeX bold format me map karna
             safe_prose = safe_prose.replace("**Related Work**", r"\section{Related Work}").replace("**Research Gaps**", r"\subsection{Identified Research Gaps}")
             safe_prose = safe_prose.replace("&", r"\&").replace("%", r"\%").replace("_", r"\_")
             latex_lines.extend([
@@ -102,35 +121,54 @@ class ExportService:
                 ""
             ])
 
+        # Standard default column sequence
+        default_order = [
+            "title", "authors", "year", "problem_statement",
+            "methodology", "key_findings", "limitations", "future_scope"
+        ]
+
+        dict_rows = [ExportService._row_to_dict(r) for r in rows] if rows else []
+
+        # Resolve columns preserving order and including any custom dynamic columns
+        columns = []
+        for k in default_order:
+            if any(k in d for d in dict_rows):
+                columns.append(k)
+
+        for d in dict_rows:
+            for k in d.keys():
+                if k not in columns:
+                    columns.append(k)
+
+        if not columns:
+            columns = default_order
+
+        num_cols = len(columns)
+        col_spec = "|".join(["p{2.5cm}" for _ in range(num_cols)])
+        col_spec = f"|{col_spec}|"
+
+        header_names = [str(col).replace("_", " ").title() for col in columns]
+        escaped_headers = [ExportService.sanitize_latex(h) for h in header_names]
+        header_row = " & ".join([f"\\textbf{{{h}}}" for h in escaped_headers]) + r" \\ \hline"
+
         latex_lines.extend([
             r"\begin{table*}[t]",
             r"\centering",
             r"\caption{Comprehensive Literature Survey Matrix}",
             r"\label{tab:lit_survey}",
             r"\resizebox{\textwidth}{!}{%",
-            r"\begin{tabular}{|p{3.5cm}|p{2cm}|p{1.2cm}|p{4.5cm}|p{4.5cm}|p{3.5cm}|}",
+            f"\\begin{{tabular}}{{{col_spec}}}",
             r"\hline",
-            r"\textbf{Title} & \textbf{Authors} & \textbf{Year} & \textbf{Methodology} & \textbf{Key Findings} & \textbf{Limitations} \\ \hline"
+            header_row
         ])
 
-        for row in rows:
-            r_title = getattr(row, "title", row.get("title", "")) if not isinstance(row, PaperMatrixRow) else row.title
-            r_authors = getattr(row, "authors", row.get("authors", "")) if not isinstance(row, PaperMatrixRow) else row.authors
-            r_year = getattr(row, "year", row.get("year", "")) if not isinstance(row, PaperMatrixRow) else row.year
-            r_method = getattr(row, "methodology", row.get("methodology", "")) if not isinstance(row, PaperMatrixRow) else row.methodology
-            r_findings = getattr(row, "key_findings", row.get("key_findings", "")) if not isinstance(row, PaperMatrixRow) else row.key_findings
-            r_limits = getattr(row, "limitations", row.get("limitations", "")) if not isinstance(row, PaperMatrixRow) else row.limitations
-
-            title = ExportService.sanitize_latex(r_title)
-            authors = ExportService.sanitize_latex(r_authors)
-            year = ExportService.sanitize_latex(r_year)
-            method = ExportService.sanitize_latex(r_method)
-            findings = ExportService.sanitize_latex(r_findings)
-            limits = ExportService.sanitize_latex(r_limits)
-
-            latex_lines.append(
-                f"{title} & {authors} & {year} & {method} & {findings} & {limits} \\\\ \\hline"
-            )
+        for d in dict_rows:
+            row_cells = []
+            for col in columns:
+                raw_val = d.get(col, "Not explicitly stated")
+                clean_val = ExportService.sanitize_latex(str(raw_val))
+                row_cells.append(clean_val)
+            latex_lines.append(" & ".join(row_cells) + r" \\ \hline")
 
         latex_lines.extend([
             r"\end{tabular}%",
@@ -147,7 +185,7 @@ class ExportService:
         """Generates standard BibTeX references from matrix rows."""
         bib_entries = []
         for row in rows:
-            data = row if isinstance(row, dict) else (row.model_dump() if hasattr(row, "model_dump") else row.__dict__)
+            data = ExportService._row_to_dict(row)
             title = data.get("title", "Untitled Document")
             authors = data.get("authors", "Unknown Authors")
             year = data.get("year", "N/A")
