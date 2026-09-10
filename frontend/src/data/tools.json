@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "ieee-literature-matrix-generator",
+    "badge": "IEEE TRANSACTIONS & CONFERENCES",
+    "title": "IEEE Literature Review Matrix Generator — LaTeX & Overleaf Ready",
+    "metaDescription": "Extract methodology, baselines, and findings from IEEE conference and journal papers directly into compilable 2-column literature survey LaTeX tables.",
+    "h1": "Generate IEEE Literature Survey Tables from Research PDFs",
+    "tagline": "Automated IEEE-style comparative analysis for B.Tech seminar reports and M.Tech theses.",
+    "articleTitle": "How to Structure an IEEE-Compliant Literature Review Table",
+    "articleContent": "Writing an IEEE literature review requires strict adherence to standardized columns: Problem Formulation, Proposed Architecture, Benchmark Datasets, Empirical Metrics, and Research Limitations. Instead of manually typesetting 2-column LaTeX tables or fighting Overleaf compilation errors, PaperMatrix automatically digests IEEE PDFs and generates standalone, landscape-ready tabular code that pastes cleanly into any IEEEtran template.",
+    "faqs": [
+      {
+        "q": "Will the generated LaTeX table compile directly inside IEEEtran class?",
+        "a": "Yes. The exported LaTeX uses standard table environments with automatic text wrapping (p-columns) and resizebox, preventing horizontal table overflow across page margins."
+      },
+      {
+        "q": "Can I export this literature matrix to Excel for seminar presentation slides?",
+        "a": "Yes. In addition to LaTeX and BibTeX code, you can export the formatted matrix directly as an auto-spaced .xlsx spreadsheet with one click."
+      }
+    ]
+  },
+  {
+    "slug": "arxiv-to-latex-table-converter",
+    "badge": "AI & COMPUTER SCIENCE RESEARCH",
+    "title": "ArXiv Paper to LaTeX Table Converter — Instant Survey Matrix",
+    "metaDescription": "Convert ArXiv machine learning and deep learning preprints into structured literature comparison tables. One-click Overleaf-ready LaTeX and BibTeX export.",
+    "h1": "Convert ArXiv Research Preprints into LaTeX Survey Matrices",
+    "tagline": "Benchmark architectures, loss functions, datasets, and trade-offs across multiple preprints in seconds.",
+    "articleTitle": "Streamlining Related Work for Fast-Paced Machine Learning Research",
+    "articleContent": "With hundreds of ArXiv papers published weekly in Generative AI, Computer Vision, and NLP, researchers spend hours organizing related work sections. This tool parses preprint abstracts, methodologies, and quantitative results to produce a unified synthesis matrix, complete with citation keys and formal academic summaries.",
+    "faqs": [
+      {
+        "q": "How does PaperMatrix handle ArXiv author names with special diacritics?",
+        "a": "All non-ASCII characters, ligatures, and European accents (such as Polish crossed-L and Umlauts) are sanitized into pdflatex-compatible macros so your document never throws undefined command exceptions."
+      },
+      {
+        "q": "Does it extract limitations and negative empirical results?",
+        "a": "Yes. The pipeline explicitly parses reported bottlenecks, dataset constraints, and ablation failures into a designated 'Limitations' column."
+      }
+    ]
+  },
+  {
+    "slug": "overleaf-literature-survey-table",
+    "badge": "OVERLEAF & TEX WORKFLOW",
+    "title": "Overleaf Literature Review Table Generator — Standalone & Compilable",
+    "metaDescription": "Create crash-proof literature review tables for Overleaf. Includes required packages, preamble boilerplate, and dynamic column alignment.",
+    "h1": "Overleaf-Ready Literature Review Matrix & Table Builder",
+    "tagline": "Stop debugging tabular syntax. Generate one-click compilable tables with zero LaTeX errors.",
+    "articleTitle": "Eliminating Common LaTeX Tabular Compilation Errors",
+    "articleContent": "Manual LaTeX tables frequently crash due to missing ampersands, unescaped percent/underscore symbols, and float environment mismatches. PaperMatrix wraps generated matrices into a standalone compilable document with geometry, graphicx, and array preambles. You can paste the entire output into Overleaf main.tex or copy solely the inner table environment into your existing report.",
+    "faqs": [
+      {
+        "q": "Do I need to install any packages manually in Overleaf?",
+        "a": "If you paste the full downloaded .tex document into a blank project, all necessary preambles (graphicx, geometry, array) are already bundled at the top. If pasting into an existing project, just ensure graphicx is loaded in your root preamble."
+      },
+      {
+        "q": "Can I add custom columns like Hardware or Baseline to the Overleaf table?",
+        "a": "Yes. Add any custom column in the builder before extraction, and the LaTeX generator will calculate column widths and include headers automatically."
+      }
+    ]
+  }
+]

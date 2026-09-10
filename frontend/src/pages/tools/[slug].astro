@@ -12,56 +12,152 @@ export async function getStaticPaths() {
       title: 'ArXiv PDF to LaTeX Literature Table Generator | PaperMatrix AI',
       metaDescription: 'Extract ArXiv papers directly into formatted, academic-ready LaTeX matrices. Perfect for CS, AI, and ML research literature surveys.',
       h1: 'Convert ArXiv Papers into LaTeX Literature Tables',
-      subtitle: 'Instantly parse ArXiv methodologies, findings, and architectures into error-free LaTeX tabular code.'
+      subtitle: 'Instantly parse ArXiv methodologies, findings, and architectures into error-free LaTeX tabular code.',
+      articleTitle: 'Automating Literature Comparison for ArXiv Preprints',
+      articleContent: 'Staying on top of ArXiv preprints in machine learning and computer science requires rapid benchmarking. PaperMatrix parses unformatted preprints, extracts theoretical contributions, datasets, and benchmark baselines, and compiles them directly into an Overleaf-ready LaTeX table with full preamble support.',
+      faqs: [
+        {
+          q: 'Will the generated LaTeX table compile in Overleaf without missing packages?',
+          a: 'Yes. Every exported table is bundled with a standalone compilable preamble including geometry, array, and graphicx packages so you encounter zero compilation errors.'
+        },
+        {
+          q: 'How does it handle author diacritics and special mathematical characters?',
+          a: 'All European ligatures, Polish accents, underscores, and reserved characters are sanitized into pdflatex macros automatically before export.'
+        }
+      ]
     },
     {
       slug: 'ieee-literature-survey-generator',
       title: 'IEEE Literature Survey Matrix Generator | PaperMatrix AI',
       metaDescription: 'Automate IEEE research paper comparison tables. Synthesize problem statements, datasets, metrics, and limitations in seconds.',
       h1: 'Automate IEEE Literature Survey Matrices',
-      subtitle: 'Build publication-grade comparative matrices for IEEE transactions, conferences, and degree dissertations.'
+      subtitle: 'Build publication-grade comparative matrices for IEEE transactions, conferences, and degree dissertations.',
+      articleTitle: 'Structuring 2-Column IEEE Literature Review Tables',
+      articleContent: 'IEEE conference and journal submissions demand rigid survey tables covering problem statements, proposed architectures, validation metrics, and limitations. Instead of manually adjusting tabular widths, generate publication-ready tables mapped directly to standard academic parameters.',
+      faqs: [
+        {
+          q: 'Can this table be inserted directly into an IEEEtran document?',
+          a: 'Yes. You can copy the inner table block directly into your two-column IEEEtran template; standard text-wrapping prevents column overflow.'
+        },
+        {
+          q: 'Can I export the comparison matrix to Excel for presentations?',
+          a: 'Yes. Along with compilable LaTeX and BibTeX code, you can download an auto-spaced Excel (.xlsx) file in one click.'
+        }
+      ]
     },
     {
       slug: 'research-paper-comparison-matrix',
       title: 'Research Paper Comparison Matrix Maker | PaperMatrix AI',
       metaDescription: 'Compare multiple research papers side-by-side. Extract parameters, benchmarks, datasets, and baseline models automatically.',
       h1: 'Side-by-Side Research Paper Comparison Matrix',
-      subtitle: 'Extract key differences across multiple papers into structured rows with custom parameters.'
+      subtitle: 'Extract key differences across multiple papers into structured rows with custom parameters.',
+      articleTitle: 'Synthesizing Multiple Research Methodologies',
+      articleContent: 'Comparing diverse empirical methodologies across multiple publications is tedious. PaperMatrix organizes disparate papers into a standardized schema, enabling researchers to cross-compare baseline models, quantitative results, and design choices side-by-side.',
+      faqs: [
+        {
+          q: 'Can I define custom comparison columns like Hardware or Dataset?',
+          a: 'Yes. You can add custom column headers directly in the builder, and the pipeline extracts targeted data from uploaded PDFs automatically.'
+        },
+        {
+          q: 'How many papers can I compare at once?',
+          a: 'You can batch upload multiple PDF files simultaneously to produce a single consolidated comparative matrix.'
+        }
+      ]
     },
     {
       slug: 'systematic-literature-review-matrix',
       title: 'Systematic Literature Review (SLR) Matrix Tool | PaperMatrix AI',
       metaDescription: 'Streamline your systematic literature review workflow. Extract extraction attributes, gaps, and outcomes into Excel & LaTeX.',
       h1: 'Systematic Literature Review (SLR) Matrix Tool',
-      subtitle: 'Synthesize papers systematically with zero prompt engineering. Export directly to Excel and LaTeX.'
+      subtitle: 'Synthesize papers systematically with zero prompt engineering. Export directly to Excel and LaTeX.',
+      articleTitle: 'Rigorous Data Extraction for Systematic Literature Reviews',
+      articleContent: 'Systematic reviews require thorough and reproducible paper data extraction. PaperMatrix accelerates PRISMA-compliant literature workflows by extracting research questions, empirical findings, and identified limitations uniformly across your study corpus.',
+      faqs: [
+        {
+          q: 'Does this tool store my uploaded research papers?',
+          a: 'No. All uploaded documents are processed ephemerally in-memory for extraction and never permanently persisted to disk.'
+        },
+        {
+          q: 'Does it generate BibTeX citations for each extracted paper?',
+          a: 'Yes. A standardized BibTeX citation entry is generated automatically alongside your matrix rows.'
+        }
+      ]
     },
     {
       slug: 'research-gap-analyzer-matrix',
       title: 'Research Gap Analysis & Literature Matrix | PaperMatrix AI',
       metaDescription: 'Identify open challenges and research gaps across multiple papers automatically into a structured survey matrix.',
       h1: 'Automate Research Gap & Literature Analysis',
-      subtitle: 'Extract unresolved limitations and future scope from papers to highlight your novel contribution.'
+      subtitle: 'Extract unresolved limitations and future scope from papers to highlight your novel contribution.',
+      articleTitle: 'Isolating Research Gaps and Unresolved Limitations',
+      articleContent: 'Formulating a novel thesis problem requires spotting where prior works fell short. This tool highlights limitations, experimental bottlenecks, and proposed future scope across existing literature so you can establish your project justification with precision.',
+      faqs: [
+        {
+          q: 'Where does the pipeline locate paper limitations?',
+          a: 'The engine scans conclusion, discussion, and ablation sections to extract explicitly reported challenges and unaddressed constraints.'
+        },
+        {
+          q: 'Can I edit the extracted findings before exporting?',
+          a: 'Yes. The interactive matrix table allows full inline text editing prior to generating your LaTeX or Excel export.'
+        }
+      ]
     },
     {
       slug: 'acm-paper-synthesis-matrix',
       title: 'ACM Digital Library Survey Matrix Generator | PaperMatrix AI',
       metaDescription: 'Parse ACM conference and journal PDFs into structured literature tables. Export to Excel and LaTeX seamlessly.',
       h1: 'ACM Research Paper Synthesis Matrix',
-      subtitle: 'Quickly organize computing, systems, and AI papers from ACM Digital Library into tabular formats.'
+      subtitle: 'Quickly organize computing, systems, and AI papers from ACM Digital Library into tabular formats.',
+      articleTitle: 'Standardized Synthesis for Computing and Systems Research',
+      articleContent: 'Computing systems and software engineering papers from ACM conferences require meticulous benchmarking. PaperMatrix converts complex architectural implementations, evaluation setups, and system trade-offs into clean tabular rows.',
+      faqs: [
+        {
+          q: 'Is this compatible with modern ACM LaTeX master templates?',
+          a: 'Yes. The generated tabular blocks conform to standard LaTeX article and acmart table conventions.'
+        },
+        {
+          q: 'Are large tables resized to prevent page clipping?',
+          a: 'Yes. Exported LaTeX wraps columns in resizebox and p-specifiers to ensure the table scales cleanly across portrait or landscape pages.'
+        }
+      ]
     },
     {
       slug: 'phd-dissertation-literature-survey',
       title: 'PhD Dissertation Literature Review Matrix Tool | PaperMatrix AI',
       metaDescription: 'Structured matrix builder for PhD theses and masters dissertations. Synthesize dozens of papers with ease.',
       h1: 'PhD Dissertation Literature Survey Tool',
-      subtitle: 'Organize foundational background literature, baselines, and benchmarks for your thesis chapters.'
+      subtitle: 'Organize foundational background literature, baselines, and benchmarks for your thesis chapters.',
+      articleTitle: 'Structuring Comprehensive Thesis Background Chapters',
+      articleContent: 'A doctorate dissertation demands an exhaustive survey chapter categorizing dozens of foundational works. PaperMatrix allows research scholars to systematically catalog literature, trace methodology evolutions, and export clean references.',
+      faqs: [
+        {
+          q: 'Can I export both synthesized prose and the tabular matrix together?',
+          a: 'Yes. You can synthesize comprehensive Related Work prose alongside the matrix table directly into your LaTeX document.'
+        },
+        {
+          q: 'Does it support landscape orientation for broad multi-column tables?',
+          a: 'Yes. The standalone LaTeX download uses the geometry package with landscape orientation by default for maximum readability.'
+        }
+      ]
     },
     {
       slug: 'sciencedirect-paper-matrix',
       title: 'ScienceDirect & Springer Paper Matrix Generator | PaperMatrix AI',
       metaDescription: 'Convert Elsevier ScienceDirect and Springer research PDFs into publication-ready comparative tables.',
       h1: 'ScienceDirect & Springer Literature Matrix',
-      subtitle: 'Extract methodologies, sample sizes, and metrics from peer-reviewed journal papers instantly.'
+      subtitle: 'Extract methodologies, sample sizes, and metrics from peer-reviewed journal papers instantly.',
+      articleTitle: 'Tabulating Peer-Reviewed Journal Literature',
+      articleContent: 'Reviewing interdisciplinary journal papers from Springer and Elsevier requires organizing experimental setups, sample dimensions, and quantitative results. This tool transforms dense multi-page PDFs into structured comparative survey tables in seconds.',
+      faqs: [
+        {
+          q: 'Can it parse multi-column journal PDF layouts accurately?',
+          a: 'Yes. The extraction pipeline handles standard two-column publication layouts without fusing disparate column text.'
+        },
+        {
+          q: 'How do I download the survey output?',
+          a: 'You can export your survey matrix as a formatted Excel spreadsheet (.xlsx), standalone LaTeX document (.tex), or raw BibTeX citations.'
+        }
+      ]
     }
   ];
 
@@ -98,6 +194,29 @@ const { tool } = Astro.props;
       <!-- Core Engine Components -->
       <FileUploadZone />
       <MatrixTable />
+
+      <!-- Googlebot Indexable Content Section -->
+      <section class="max-w-3xl w-full mx-auto mt-16 pt-12 border-t border-zinc-800/80">
+        <article class="space-y-6 text-zinc-300 leading-relaxed">
+          <h2 class="text-xl sm:text-2xl font-bold text-zinc-100 tracking-tight">
+            {tool.articleTitle}
+          </h2>
+          <p class="text-sm sm:text-base text-zinc-400 leading-relaxed">
+            {tool.articleContent}
+          </p>
+
+          <!-- Tool-Specific FAQs for Search Intent -->
+          <div class="pt-6 space-y-4">
+            <h3 class="text-lg font-semibold text-zinc-200">Frequently Asked Questions</h3>
+            {tool.faqs.map((faq) => (
+              <div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 space-y-1.5">
+                <h4 class="text-sm font-medium text-zinc-100">{faq.q}</h4>
+                <p class="text-xs text-zinc-400 leading-normal">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+      </section>
     </main>
 
     <Footer />
